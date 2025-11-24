@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Livewire\GameStart as GameStart;
+use App\Http\Controllers\CharacterController;
+use App\Livewire\GameStart;
 
 
 Route::get('/', function () {
@@ -9,5 +10,8 @@ Route::get('/', function () {
 });
 
 Route::get('/game-start', GameStart::class)->name('game.start');
+
+
+Route::get('/characters', [CharacterController::class, 'index'])->name('characters.index');
 
 
