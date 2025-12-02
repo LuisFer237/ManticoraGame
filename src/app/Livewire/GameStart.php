@@ -2,6 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Defender;
+use App\Models\Game;
+use Dom\CharacterData;
 use Livewire\Component;
 use App\Services\RickAndMortyService;
 
@@ -78,6 +81,28 @@ class GameStart extends Component
         $this->selectedCharacters = array_filter($this->selectedCharacters, function ($char) use ($characterId) {
             return $char['id'] !== $characterId;
         });
+    }
+
+    public function startGame()
+    {
+        
+        $newGame = new Game();
+        $newGame->status = 'in_progress';
+        $newGame->save();
+
+
+        foreach ($this->selectedCharacters as $key => $value) {
+            
+            $newCharacter = new Defender();
+            $newCharacter->api_id = $value['id'];
+            $newCharacter->name = $value['name'];
+            $newCharacter->image = $value['image'];
+            $newCharacter->save();
+        
+        }
+        if (count($this->selectedCharacters) === 2) {
+            return redirect()->route('game.choose-weapons', ['gameId' => $newGame->id]);
+        }
     }
 
     public function render()

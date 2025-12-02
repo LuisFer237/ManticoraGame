@@ -50,7 +50,6 @@
                     @endforeach
                 </div>
 
-                <!-- <CHANGE> Start Game button - visible and enabled only when 2 characters selected -->
                 <button wire:click="startGame" @if (count($selectedCharacters) !== 2) disabled @endif
                     class="w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary">
                     @if (count($selectedCharacters) === 2)
