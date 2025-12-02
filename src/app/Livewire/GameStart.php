@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Services\RickAndMortyService;
+use Illuminate\Support\Facades\Session;
 
 class GameStart extends Component
 {
@@ -14,6 +15,7 @@ class GameStart extends Component
 
     public function mount()
     {
+        $this->selectedCharacters = Session::get('selectedCharacters', []);
         $this->loadData();
     }
 
@@ -34,7 +36,6 @@ class GameStart extends Component
 
     public function nextPage()
     {
-        // dd("Next page clicked");
         if (isset($this->info['next'])) {
             $this->page++;
             $this->loadData();
@@ -70,6 +71,7 @@ class GameStart extends Component
         $character = collect($this->characters)->firstWhere('id', $characterId);
         if ($character) {
             $this->selectedCharacters[] = $character;
+            Session::put('selectedCharacters', $this->selectedCharacters);
         }
     }
 
@@ -78,6 +80,13 @@ class GameStart extends Component
         $this->selectedCharacters = array_filter($this->selectedCharacters, function ($char) use ($characterId) {
             return $char['id'] !== $characterId;
         });
+        Session::put('selectedCharacters', $this->selectedCharacters);
+    }
+
+    public function startGame()
+    {
+        $this->selectedCharacters = [];
+        Session::forget('selectedCharacters');
     }
 
     public function render()

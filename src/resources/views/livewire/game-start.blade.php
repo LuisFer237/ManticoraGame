@@ -2,6 +2,13 @@
     <div class="max-w-4xl mx-auto">
         <!-- Header -->
         <div class="mb-8">
+            <a href="{{ route('welcome') }}"
+                class="text-sm text-primary hover:text-primary/80 transition-colors mb-4 inline-flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Volver
+            </a>
             <h1 class="text-3xl font-semibold tracking-tight text-foreground">Personajes</h1>
             <p class="text-sm text-muted-foreground mt-1">Selecciona dos personajes defensores para comenzar</p>
         </div>
@@ -50,7 +57,6 @@
                     @endforeach
                 </div>
 
-                <!-- <CHANGE> Start Game button - visible and enabled only when 2 characters selected -->
                 <button wire:click="startGame" @if (count($selectedCharacters) !== 2) disabled @endif
                     class="w-full px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary">
                     @if (count($selectedCharacters) === 2)
@@ -81,16 +87,28 @@
                             </p>
                         </div>
 
+                        {{-- Buttons --}}
+                        <div class="flex justify-center items-center gap-1">
+                            <button
+                                class="px-3 py-2 bg-primary text-primary-foreground rounded-md font-medium text-sm hover:bg-primary/90 transition-colors active:scale-95 
+                            disabled:opacity-50 disabled:cursor-not-allowed flex justify-around gap-1"
+                                onclick="window.location.href = '{{ route('character.detail', ['characterId' => $character['id']]) }}'">
+                                <x-ionicon-open-outline class="size-4 my-auto" />
+                                Detalles
+                            </button>
+                            <button type="button" wire:click="selectCharacter({{ $character['id'] }})"
+                                @if (in_array($character['id'], array_column($selectedCharacters, 'id')) || count($selectedCharacters) >= 2) disabled @endif
+                                class="px-5 py-2 bg-primary text-primary-foreground rounded-md font-medium text-sm hover:bg-primary/90 transition-colors active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
+                                @if (in_array($character['id'], array_column($selectedCharacters, 'id')))
+                                    Seleccionado
+                                @else
+                                    Seleccionar
+                                @endif
+                            </button>
+                        </div>
+
                         <!-- Select Button -->
-                        <button type="button" wire:click="selectCharacter({{ $character['id'] }})"
-                            @if (in_array($character['id'], array_column($selectedCharacters, 'id')) || count($selectedCharacters) >= 2) disabled @endif
-                            class="px-5 py-2 bg-primary text-primary-foreground rounded-md font-medium text-sm hover:bg-primary/90 transition-colors active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shrink-0">
-                            @if (in_array($character['id'], array_column($selectedCharacters, 'id')))
-                                Seleccionado
-                            @else
-                                Seleccionar
-                            @endif
-                        </button>
+
                     </div>
                 @endforeach
             </div>
@@ -115,12 +133,6 @@
             <!-- Empty State -->
             <div
                 class="flex flex-col items-center justify-center py-16 px-4 rounded-lg border border-dashed border-border">
-                <svg class="w-12 h-12 text-muted-foreground mb-3" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9.172 16.172a4 4 0 015.656 0M9 10a4 4 0 118 0 4 4 0 01-8 0zM21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                    </path>
-                </svg>
                 <p class="text-muted-foreground text-sm">No se encontraron personajes. Intenta ajustar tu búsqueda.</p>
             </div>
         @endif

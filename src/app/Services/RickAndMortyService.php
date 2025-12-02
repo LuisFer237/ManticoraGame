@@ -62,4 +62,14 @@ class RickAndMortyService
             'results' => $results
         ];
     }
+
+    // Method to get a single character by ID
+    public function getCharacterById($id)
+    {
+        $response = Http::timeout(5)->get("https://rickandmortyapi.com/api/character/" . $id);
+
+        if ($response->failed()) return null;
+
+        return $response->json();
+    }
 }
